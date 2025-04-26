@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee+Tint&family=Cascadia+Code:ital,wght@0,200..700;1,200..700&family=Dancing+Script:wght@400..700&family=Lavishly+Yours&family=Underdog&display=swap');
+
+
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.desktop-links {
+    display: none;          /* hide by default */
+  }
+  @media (min-width: 969px) {
+    .desktop-links {
+      display: flex;        /* show when ≥ 917px */
+    }
+  }
+  /* hide by default */
+.nav-toggle {
+    display: none;
+  }
+  
+  /* show when viewport ≥ 968px */
+  @media (max-width: 968px) {
+    .nav-toggle {
+      display: flex; /* or flex, as you prefer */
+    }
+  }
+
