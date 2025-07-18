@@ -2,12 +2,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/auth/authSlice';
+
+
+
 
 export default function NavbarHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user); // Adjust according to your slice
+
 
   return (
+    <>
     <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <div className="ml-10 mr-10">
         <div className="flex justify-between items-center h-16">
@@ -41,11 +50,18 @@ export default function NavbarHeader() {
                 aria-expanded={userMenuOpen}
                 aria-label="User menu"
               >
-                <img
-                  src="https://media-hosting.imagekit.io/065a5250e9394c77/WhatsApp%20Image%202025-04-18%20at%2014.55.50_2812de02.jpg?Expires=1839581475&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=3RBDwbfokykNLe0e4LQyeLoLgbKZ4qIFc29NVkb46qAYn1vUWrarkaIMrGlOlP4A~gXv5HmL~TwaPtFLKnyHNSSeEOsXonuJwTFFaB~UUNmy0f5ZwdYWdO7Z3YTzKKQ5Lo9tvq~v5BI6QMEyBHVifR3vBXSZ~NRCnV8e1X2CG4wahQbSE5EVAuaEnX149HuOU3X9tiglJjgKU8aB-4UjtwITTxgparhpoJA3jYFHmUaiziqJR8xBzVZsX1TWMmr5xYwy2zmBHILWW6WDeW9vyEkQVphlyaDY-R5EU6wyofHiUpEaopzyM-dyRpbChrgobqwA5P~oKrgnJhgjsSbcsg__"
-                  alt="User"
-                  className="h-10 w-auto rounded-full  ring-gray-300 dark:ring-gray-600"
-                />
+            <img
+                src={
+                  user?.avatar
+                    ? user.avatar.startsWith('data:')
+                      ? user.avatar
+                      : `data:image/png;base64,${user.avatar}`
+                    : `https://ui-avatars.com/api/?name=${user?.name || 'Guest'}`
+                }
+                alt="User"
+                className="h-10 w-10 rounded-full ring-2 ring-gray-300 dark:ring-gray-600 object-cover"
+              />
+
                 
               </button>
               {/* Dropdown */}
@@ -63,8 +79,22 @@ export default function NavbarHeader() {
                 </div>
               )}
             </div>
-            <button className="hidden sm:!flex px-2 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-bold font-[Cascadia_Code]">
-              get Started</button>
+           {user ? (
+              <button
+                onClick={() => dispatch(logout())}
+                className="hidden sm:!flex px-2 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 font-bold font-[Cascadia_Code]"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="hidden sm:!flex px-2 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-bold font-[Cascadia_Code]"
+              >
+                Get Started
+              </Link>
+            )}
+
 
             {/* Mobile Menu Button */}
             <button
@@ -104,5 +134,6 @@ export default function NavbarHeader() {
         </div>
       )}
     </nav>
+    </>
   );
 }
